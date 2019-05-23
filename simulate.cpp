@@ -67,16 +67,18 @@ std::vector<int> Simulation::random_move() {
   return {dis(gen), dis(gen)};
 }
 
-void Simulation::run(int num_steps) {
+bool Simulation::run(int num_steps) {
+  bool is_localized = false;
   for (int i = 0; i < num_steps; ++i) {
     sense();
     auto dxy = random_move();
     move(dxy[1], dxy[0]);
-    show_beliefs();
+    is_localized = show_beliefs();
   }
+  return is_localized;
 }
 
-void Simulation::show_beliefs() {
+bool Simulation::show_beliefs() {
   const auto m = static_cast<int>(beliefs.size());
   const auto n = static_cast<int>(beliefs[0].size());
   int i_max = 0, j_max = 0;
@@ -115,6 +117,7 @@ void Simulation::show_beliefs() {
     }
     std::cout << std::endl;
   }
+  return is_localized;
 }
 
 char Simulation::get_observed_color() {

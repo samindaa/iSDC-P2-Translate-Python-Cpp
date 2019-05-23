@@ -9,8 +9,8 @@ using namespace std;
 
 int main() {
   cout << endl;
-//	test_helpers();
-//	test_localizer();
+  test_helpers();
+  test_localizer();
   test_simulation();
   cout << endl;
   return 0;
@@ -278,14 +278,27 @@ bool test_localizer() {
 }
 
 bool test_simulation() {
-  const auto map = read_map("maps/m3.txt");
-  const float blur = 0.05;
-  const float p_hit = 200.0;
-  const auto m = static_cast<int>(map.size());
-  const auto n = static_cast<int>(map[0].size());
-  Simulation simulation(map, blur, p_hit, {m / 2, n / 2});
+
+  auto simulate = [](const std::string &file_name, int num_steps) {
+    const auto map = read_map(file_name);
+    const float blur = 0.05;
+    const float p_hit = 200.0;
+    const auto m = static_cast<int>(map.size());
+    const auto n = static_cast<int>(map[0].size());
+    Simulation simulation(map, blur, p_hit, {m / 2, n / 2});
 //  show_grid(simulation.beliefs);
 //  simulation.show_beliefs();
-  simulation.run(20);
+    if (simulation.run(num_steps)) {
+      std::cout << "! - simulation worked correctly for map: " << file_name
+                << std::endl;
+    } else {
+      std::cout << "X - simulation did not work correctly for map: "
+                << file_name << std::endl;;
+    }
+  };
+
+  simulate("maps/m3.txt", 20);
+  simulate("maps/m4.txt", 20);
+
   return true;
 }

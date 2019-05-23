@@ -37,9 +37,9 @@ class Simulation {
              float,
              std::vector<int>);
 
-  void run(int num_steps=1);
+  bool run(int num_steps=1);
 
-  void show_beliefs();
+  bool show_beliefs();
 
 };
 
