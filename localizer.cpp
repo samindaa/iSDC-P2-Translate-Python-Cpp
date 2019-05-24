@@ -40,20 +40,13 @@ using namespace std;
            0.25 0.25
 */
 vector<vector<float> > initialize_beliefs(const vector<vector<char> > &grid) {
-  vector<vector<float> > newGrid;
-
   // your code here
   const auto m = grid.size();
   assert(m > 0);
   const auto n = grid[0].size();
   assert(n > 0);
-  newGrid = zeros(m, n);
-  const float prob = 1.0 / (static_cast<float>(m) * static_cast<float>(n));
-  for (auto &row : newGrid) {
-    for (auto &cell : row) {
-      cell = prob;
-    }
-  }
+  const auto p = 1.0 / (static_cast<float>(m) * static_cast<float>(n));
+  vector<vector<float> > newGrid(m, std::vector<float>(n, p));
   return newGrid;
 }
 
@@ -170,8 +163,7 @@ vector<vector<float> > sense(char color,
   newGrid = zeros(m, n);
   for (size_t i = 0; i < m; ++i) {
     for (size_t j = 0; j < n; ++j) {
-      const auto hit = static_cast<float>(grid[i][j] == color);
-      newGrid[i][j] = beliefs[i][j] * (p_hit * hit + p_miss * (1.0 - hit));
+      newGrid[i][j] = beliefs[i][j] * ((grid[i][j] == color) ? p_hit : p_miss);
     }
   }
   return normalize(newGrid);
